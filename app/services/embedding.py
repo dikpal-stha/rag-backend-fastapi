@@ -1,13 +1,10 @@
 from typing import List, Dict
-from sentence_transformers import SentenceTransformer
-from qdrant_client import QdrantClient
+from core.config import get_client, get_model, COLLECTION_NAME
 from qdrant_client.http.models import VectorParams, PointStruct
 
 # Initialize Model and Qdrant-client
-model = SentenceTransformer("all-MiniLM-L6-v2")
-client = QdrantClient(url="http://localhost:6333")
-
-COLLECTION_NAME = "documents"
+model = get_model()
+client = get_client()
 
 # check if the collection exists
 if COLLECTION_NAME not in [c.name for c in client.get_collection().collections]:
