@@ -12,12 +12,12 @@ def retrieve_chunks(query: str, top_k: int = 3)-> List[Dict]:
     query_vector = model.encode([query])[0].tolist()
 
     # Search Qdrant
-    results = client.search(
+    results = client.query_points(
         collection_name = COLLECTION_NAME,
-        query_vector = query_vector,
+        query = query_vector,
         limit = top_k
     )
 
     # Return payloads (metadata)
-    return [res.payload for res in results]
+    return [res.payload for res in results.points]
 

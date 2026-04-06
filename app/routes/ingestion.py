@@ -9,12 +9,6 @@ router = APIRouter()
 # Initiate database
 init_db()
 
-# testing
-@router.get("/")
-def health_check():
-    return {"status": "ok"}
-
-
 # Upload file as .txt or .pdf
 @router.post('/upload')
 async def upload_document(file : UploadFile = File(...), chunk_method: str = "fixed"):

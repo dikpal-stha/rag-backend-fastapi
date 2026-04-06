@@ -1,7 +1,7 @@
-from fastapi import FASTAPI
+from fastapi import FastAPI
 from app.routes import ingestion, chat
 
-app = FASTAPI(
+app = FastAPI(
     title = "RAG Internship Project",
     description = "Data ingestion API + chat RAG API",
     version = "0.1",
