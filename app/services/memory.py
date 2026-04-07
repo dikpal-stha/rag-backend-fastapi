@@ -1,5 +1,8 @@
 import redis
 import json
+from typing import Optional
+from models.schemas import BookingDetails
+
 
 r = redis.Redis(
     host='redis-18426.c301.ap-south-1-1.ec2.cloud.redislabs.com',
@@ -29,3 +32,22 @@ def get_history(user_id: str):
     return [json.loads(m) for m in messages]
 
 
+# save booking details
+def save_booking_details(user_id: str, details: BookingDetails):
+    key = f"booking:{user_id}"
+
+    r.set(key, json.dumps(details.model_dump()))
+
+
+# get booking details
+def get_booking_details(user_id: str) -> Optional[BookingDetails]:
+    key = f"booking:{user_id}"
+
+    details = r.get(key)
+
+    if details is None:
+        return None
+
+    data = json.loads(details)
+
+    return (BookingDetails(**data))
