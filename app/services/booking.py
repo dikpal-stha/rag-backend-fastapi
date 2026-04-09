@@ -1,6 +1,7 @@
 from models.schemas import BookingDetails
 from services.rag import llm_generate
-from services.memory import save_booking_details, get_booking_details
+from services.memory import save_booking_details, get_booking_details, clear_booking_details
+from services.booking_db import save_booking_to_sql
 
 def detect_intent(message: str) -> str:
     prompt = f"""
@@ -166,10 +167,15 @@ def handle_booking_request(message: str, user_id: str):
             "response": generate_missing_fields_response(missing_fields),
             "details": details 
         }
+    
+    # save only if all details are extracted
+    save_booking_to_sql(details)
+    clear_booking_details(user_id)
 
     return {
         "intent": "booking",
         "complete": True,
+        "response": "Your interview booking has been recorded successfully!",
         "details": details
     }
 
