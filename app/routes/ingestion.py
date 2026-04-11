@@ -50,7 +50,11 @@ async def upload_document(file : UploadFile = File(...), chunk_method: str = "fi
 
     # Generate metadata for each chunk
     metadata = [
-        {"filename":file.filename, "chunk_index": idx,"text_preview": chunk[:100]}
+        {"filename":file.filename,
+        "chunk_index": idx,
+        "text": chunk,
+        "text_preview": chunk[:100]
+        }
         for idx, chunk in enumerate(chunks)
     ]
 

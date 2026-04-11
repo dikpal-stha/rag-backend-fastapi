@@ -7,7 +7,10 @@ def extract_text_from_txt(file_path: str) -> str:
     if not path.is_file():
         raise FileNotFoundError(f"{file_path} does not exist")
     
-    return path.read_text(encoding="utf-8")
+    try:
+        return path.read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        return path.read_text(encoding="latin-1")
 
 
 # Extract from pdf format

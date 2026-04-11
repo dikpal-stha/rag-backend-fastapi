@@ -23,7 +23,7 @@ def sentence_based_chunking(text:str, chunk_size = 500, overlap: int = 20) -> Li
     current_chunk = ""
 
     for sentence in sentences:
-        if len(current_chunk) + len(sentences) <= chunk_size:
+        if len(current_chunk) + len(sentence) <= chunk_size:
             current_chunk += sentence + " "
         
         else:

@@ -31,7 +31,7 @@ def format_history(history: list) -> str:
         content = msg["content"]
         history_lines.append(f"{role}: {content}")
 
-        return "\n".join(history_lines)
+    return "\n".join(history_lines)
 
 
 # response pipeline
@@ -44,6 +44,11 @@ def generate_response(query: str, user_id: str):
     
     #build prompt
     prompt = f"""
+    Answer the question using only the provided context and conversation history.
+
+    Give a short but complete answer in a full sentence.
+    If the answer is not in the context, say exactly: I don't know
+    
         Conversation History:
         {history_text}
         

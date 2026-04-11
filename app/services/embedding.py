@@ -1,3 +1,4 @@
+import uuid
 from typing import List, Dict
 from core.config import get_client, get_model, COLLECTION_NAME
 from qdrant_client.http.models import VectorParams, PointStruct
@@ -7,7 +8,7 @@ emd_model = get_model()
 client = get_client()
 
 # check if the collection exists
-if COLLECTION_NAME not in [c.name for c in client.get_collection().collections]:
+if COLLECTION_NAME not in [c.name for c in client.get_collections().collections]:
     client.recreate_collection(
         collection_name = COLLECTION_NAME,
         vectors_config  = VectorParams(size=384, distance="Cosine")
@@ -24,8 +25,8 @@ def store_chunks(chunks: List[str], metadata: List[Dict]):
     embeddings = generate_embeddings(chunks)
 
     points = [
-        PointStruct(id=i, vector=vec, payload=meta)
-        for i, (vec,meta) in enumerate(zip(embeddings, metadata))
+        PointStruct(id= str(uuid.uuid4()), vector=vec, payload=meta)
+        for vec, meta in zip(embeddings, metadata)
     ]
 
     client.upsert(collection_name= COLLECTION_NAME, points = points)

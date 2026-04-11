@@ -19,5 +19,5 @@ def retrieve_chunks(query: str, top_k: int = 3)-> List[Dict]:
     )
 
     # Return payloads (metadata)
-    return [res.payload for res in results.points]
+    return [res.payload["text"] for res in results.points if "text" in res.payload]
 
