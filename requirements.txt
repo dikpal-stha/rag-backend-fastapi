@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+python-dotenv
+transformers
+sentence-transformers
+torch
+qdrant-client
+redis
+pydantic
+python-multipart

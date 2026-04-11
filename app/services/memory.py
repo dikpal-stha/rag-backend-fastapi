@@ -2,15 +2,9 @@ import redis
 import json
 from typing import Optional
 from models.schemas import BookingDetails
+from core.clients import get_redis_client
 
-
-redis_client = redis.Redis(
-    host='redis-18426.c301.ap-south-1-1.ec2.cloud.redislabs.com',
-    port=18426,
-    decode_responses=True,
-    username="default",
-    password="GHtDXyjc2yhUhu7SCxubm5Fxpoyj4oQF"
-)
+redis_client = get_redis_client()
 
 # save message
 def save_message(user_id: str, role: str, content: str):

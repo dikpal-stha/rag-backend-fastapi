@@ -1,11 +1,13 @@
 import uuid
 from typing import List, Dict
-from core.config import get_client, get_model, COLLECTION_NAME
+from core.config import COLLECTION_NAME
+from core.clients import get_qdrant_client
+from core.model_loader import get_embedding_model
 from qdrant_client.http.models import VectorParams, PointStruct
 
-# Initialize Model and Qdrant-client
-emd_model = get_model()
-client = get_client()
+# Get Embedding Model and Qdrant-client
+emd_model = get_embedding_model()
+client = get_qdrant_client()
 
 # check if the collection exists
 if COLLECTION_NAME not in [c.name for c in client.get_collections().collections]:

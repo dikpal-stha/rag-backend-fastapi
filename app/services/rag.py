@@ -1,13 +1,11 @@
 from typing import List
 from services.retriever import retrieve_chunks
 from services.memory import save_message, get_history
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+from core.model_loader import get_llm_model, get_llm_tokenizer
 
-MODEL_NAME = "google/flan-t5-base"
-
-tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
-
-llm_model = AutoModelForSeq2SeqLM.from_pretrained(MODEL_NAME)
+# Get llm_model and tokernizer
+llm_model = get_llm_model()
+tokenizer = get_llm_tokenizer()
 
 # llm helper for response generation
 def llm_generate(prompt: str, max_new_tokens: int = 100) -> str:

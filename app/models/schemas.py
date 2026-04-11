@@ -10,4 +10,11 @@ class BookingDetails(BaseModel):
     time: Optional[str] = None
 
 
+class ChatRequest(BaseModel):
+    user_id: str
+    query: str
 
+
+class ChatResponse(BaseModel):
+    response: str
+    intent: str
