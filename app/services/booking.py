@@ -1,107 +1,89 @@
+import json
+import re
 from models.schemas import BookingDetails
 from services.rag import llm_generate
 from services.memory import save_booking_details, get_booking_details, clear_booking_details
 from services.booking_db import save_booking_to_sql
 
-def detect_intent(message: str) -> str:
-    prompt = f"""
-    Is the message about booking an interview?
+def keyword_booking_intent(message: str) -> bool:
+    msg = message.lower()
+    keywords = ["book", "booking", "schedule", "reschedule", "cancel", "interview"]
+    return any(word in msg for word in keywords)
 
-    Return only one word:
-    booking
-    or
-    general
+def extract_email_rule(message: str):
+    match = re.search(r'[\w\.-]+@[\w\.-]+\.\w+', message)
+    return match.group(0) if match else None
 
-    Message:
-    {message}
-    """
-    response = llm_generate(prompt, max_new_tokens=10).strip().lower()
-    # print("INTENT RAW", response)
+def extract_time_rule(message: str):
+    match = re.search(r'\b\d{1,2}(:\d{2})?\s?(AM|PM|am|pm)\b', message)
+    return match.group(0) if match else None
 
-    if "booking" in response:
-        return "booking"
-    return "general"
+# date validation to stop llm hallunication
+def validate_date(date: str, message: str):
+    if not date:
+        return None
 
+    if any(word in message.lower() for word in date.lower().split()):
+        return date
 
-def extract_email(message: str) -> str:
-    prompt = f"""
-    Extract the email address from the message.
-    If none found, return null.
-
-    Message:
-    {message}
-    """
-
-    response = llm_generate(prompt).strip()
-
-    if "@" in response:
-        return response
     return None
 
 
-def extract_name(message: str) -> str:
+# Booking details extraction using LLM
+def extract_booking_details_llm(message: str):
     prompt = f"""
-    Extract the person's name from the message.
-    If none found, return null.
+        Extract booking information from the message.
 
-    Message:
-    {message}
+        Return ONLY valid JSON in this exact format:
+        {{
+        "intent": "booking" or "general",
+        "name": null or string,
+        "email": null or string,
+        "date": null or string,
+        "time": null or string
+        }}
+
+        Rules:
+        - If the message is about booking, scheduling, rescheduling, or cancelling an interview, intent = "booking"
+        - Otherwise intent = "general"
+        - Do not invent information
+        - If a field is not explicitly present, return null
+        - Return only JSON
+
+        Message:
+        {message}
     """
+    response = llm_generate(prompt, max_new_tokens=100).strip()
 
-    response = llm_generate(prompt).strip()
-
-    if response.lower() == "null" or response == "":
-        return None
-
-    return response
-
-
-def extract_date(message: str) -> str:
-    prompt = f"""
-    Extract only the date mentioned in this message.
-    If no date is mentioned, return only: null
-
-    Message:
-    {message}
-    """
-
-    response = llm_generate(prompt).strip()
-
-    if response.lower() == "null" or response == "":
-        return None
-
-    return response
-
-
-def extract_time(message: str) -> str:
-    prompt = f"""
-    Extract only the time mentioned in this message.
-    If no time is mentioned, return only: null
-
-    Message:
-    {message}
-    """
-
-    response = llm_generate(prompt).strip()
-
-    if response.lower() == "null" or response == "":
-        return None
-
-    return response
+    try:
+        data = json.loads(response)
+        return data
+    except Exception:
+        return {
+            "intent": "general",
+            "name": None,
+            "email": None,
+            "date": None,
+            "time": None
+        }
 
 
 def extract_booking_details(message: str):
-    intent = detect_intent(message)
+    if not keyword_booking_intent(message):
+        return BookingDetails(intent="general")
+
+    email = extract_email_rule(message)
+    time = extract_time_rule(message)
+    data = extract_booking_details_llm(message)
+    date = validate_date(data.get("date"), message)
     
-    if intent != "booking":
-        return BookingDetails(intent = "general")
-    
+
     return BookingDetails(
-        intent = "booking",
-        name = extract_name(message),
-        email = extract_email(message),
-        date = extract_date(message),
-        time = extract_time(message)
+        intent = data.get("intent", "booking"),
+        name = data.get("name"),
+        email = email or data.get("email"),
+        date = date,
+        time = time or data.get("time")
     )
 
 
