@@ -1,7 +1,7 @@
 from typing import List
-from services.retriever import retrieve_chunks
-from services.memory import save_message, get_history
-from core.model_loader import get_llm_model, get_llm_tokenizer
+from app.services.retriever import retrieve_chunks
+from app.services.memory import save_message, get_history
+from app.core.model_loader import get_llm_model, get_llm_tokenizer
 
 # Get llm_model and tokernizer
 llm_model = get_llm_model()

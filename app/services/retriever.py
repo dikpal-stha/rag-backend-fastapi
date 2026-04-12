@@ -1,4 +1,4 @@
-from core.config import get_client, get_model, COLLECTION_NAME
+from app.core.config import get_client, get_model, COLLECTION_NAME
 from typing import List, Dict
 
 # Initialize model and client

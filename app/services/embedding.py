@@ -1,8 +1,8 @@
 import uuid
 from typing import List, Dict
-from core.config import COLLECTION_NAME
-from core.clients import get_qdrant_client
-from core.model_loader import get_embedding_model
+from app.core.config import COLLECTION_NAME
+from app.core.clients import get_qdrant_client
+from app.core.model_loader import get_embedding_model
 from qdrant_client.http.models import VectorParams, PointStruct
 
 # Get Embedding Model and Qdrant-client

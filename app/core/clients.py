@@ -1,6 +1,6 @@
 import redis
 from qdrant_client import QdrantClient
-from core.config import (
+from app.core.config import (
     USE_LOCAL_QDRANT,
     QDRANT_HOST,
     QDRANT_PORT,

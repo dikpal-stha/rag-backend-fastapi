@@ -1,8 +1,7 @@
 from fastapi import APIRouter
-from pydantic import BaseModel
-from models.schemas import ChatRequest, ChatResponse
-from services.booking import handle_booking_request
-from services.rag import generate_response
+from app.models.schemas import ChatRequest, ChatResponse
+from app.services.booking import handle_booking_request
+from app.services.rag import generate_response
 
 router = APIRouter()
 

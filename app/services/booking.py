@@ -1,9 +1,9 @@
 import json
 import re
-from models.schemas import BookingDetails
-from services.rag import llm_generate
-from services.memory import save_booking_details, get_booking_details, clear_booking_details
-from services.booking_db import save_booking_to_sql
+from app.models.schemas import BookingDetails
+from app.services.rag import llm_generate
+from app.services.memory import save_booking_details, get_booking_details, clear_booking_details
+from app.services.booking_db import save_booking_to_sql
 
 def keyword_booking_intent(message: str) -> bool:
     msg = message.lower()

@@ -1,6 +1,6 @@
 from sentence_transformers import SentenceTransformer
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
-from core.config import EMBEDDING_MODEL_NAME, LLM_MODEL_NAME
+from app.core.config import EMBEDDING_MODEL_NAME, LLM_MODEL_NAME
 
 _embedding_model = None
 _tokenizer = None

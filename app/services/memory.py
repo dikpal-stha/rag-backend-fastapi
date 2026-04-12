@@ -1,8 +1,8 @@
 import redis
 import json
 from typing import Optional
-from models.schemas import BookingDetails
-from core.clients import get_redis_client
+from app.models.schemas import BookingDetails
+from app.core.clients import get_redis_client
 
 redis_client = get_redis_client()
 
