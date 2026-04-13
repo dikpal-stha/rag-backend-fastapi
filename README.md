@@ -93,7 +93,7 @@ Supports:
 
 ## Future Improvements
 
-- Use stronger LLM model for booking extraction(For ex. Qwen)
+- Use stronger LLM model(For ex. Qwen)
 - Improve booking extraction
 - Reduce LLM hallucination
 
